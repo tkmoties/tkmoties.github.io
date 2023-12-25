@@ -1,0 +1,76 @@
+<div class="card my-1 motie-card
+{% if motie['Stemmingen'][0]['Resultaat'] == 'Aangenomen.' %}
+border-success
+{% endif %}
+{% if motie['Stemmingen'][0]['Resultaat'] == 'Verworpen.' %}
+border-danger
+{% endif %}
+">
+  <div class="card-header motie-onderwerp
+  {% if motie['Stemmingen'][0]['Resultaat'] == 'Aangenomen.' %}
+  text-bg-success
+  {% endif %}
+  {% if motie['Stemmingen'][0]['Resultaat'] == 'Verworpen.' %}
+  text-bg-danger
+  {% endif %}
+  ">
+      {{ motie['Onderwerp'] }}
+  </div>
+  <div class="card-body">
+    <h7 class="card-subtitle mb-2 text-body-secondary motie-titel">
+      {{ motie['Titel'] }}
+    </h7><br/>
+    <h7 class="card-subtitle mb-2 text-body-secondary motie-indieners">
+      Indieners: {{ motie['Indieners'] | join: "; " }}
+    </h7><br/>
+    <h7 class="card-subtitle mb-2 text-body-secondary motie-indieners">
+      Kabinetsappreciatie: {{ motie['Kabinetsappreciatie'] }}
+    </h7>
+  </div>
+  <ul class="list-group list-group-flush">
+    {% for stemming in motie['Stemmingen'] %}
+    <li class="list-group-item d-flex">
+      <div class="flex-grow-1">
+        <div class="progress-stacked d-fill">
+          <div class="progress motie-voor" role="progressbar" aria-label="SegmentVoor" aria-valuenow="{{ stemming.PercentVoor }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ stemming.PercentVoor }}%">
+            <div class="progress-bar progress-bar-striped bg-success">
+              {{ stemming['Voor'] }}
+            </div>
+          </div>
+          <div class="progress motie-tegen" role="progressbar" aria-label="SegmentTegen" aria-valuenow="{{ stemming.PercentTegen }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ stemming.PercentTegen }}%">
+            <div class="progress-bar progress-bar-striped bg-danger">
+              {{ stemming['Tegen'] }}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="ps-2 motie-resultaat">
+        {{ stemming['Resultaat'] }}
+        {% if stemming['Resultaat'] == 'Aangenomen.' %}
+          {% include symbol-voor.html %}
+        {% endif %}
+        {% if stemming['Resultaat'] == 'Verworpen.' %}
+          {% include symbol-tegen.html %}
+        {% endif %}
+      </div>
+    </li>
+    <li class="list-group-item">
+      <div class="container text-left">
+        <div class="row row-cols-2 row-cols-md-5 motie-stemming">
+          {% for fractie in motie['Stemmingen'][0]['Fracties'] %}
+            <div class="col" style="white-space: nowrap;">
+            {% if fractie[1] == 'Voor' %}
+              {% include symbol-voor.html %}
+            {% endif %}
+            {% if fractie[1] == 'Tegen' %}
+              {% include symbol-tegen.html %}
+            {% endif %}
+            {{ fractie[0] }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
