@@ -58,13 +58,15 @@ border-danger
       <div class="container text-left">
         <div class="row row-cols-2 row-cols-md-5 motie-stemming">
           {% for fractie in motie['Stemmingen'][0]['Fracties'] %}
-            <div class="col" style="white-space: nowrap;">
-            {% if fractie[1] == 'Voor' %}
+            <div class="col text-truncate">
+            {% case fractie[1] %}
+            {% when "Voor" %}
               {% include symbol-voor.html %}
-            {% endif %}
-            {% if fractie[1] == 'Tegen' %}
+            {% when "Tegen" %}
               {% include symbol-tegen.html %}
-            {% endif %}
+            {% else %}
+              {% include symbol-anders.html %}
+            {% endcase %}
             {{ fractie[0] }}
             </div>
           {% endfor %}
