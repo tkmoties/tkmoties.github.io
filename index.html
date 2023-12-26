@@ -25,7 +25,7 @@
         {% assign currentDate = motie.GewijzigdOp | slice: 0, 10 %}
         {% if lastDate != currentDate %}
           {% assign lastDate = currentDate %}
-          <div class="date-separator text-body-secondary">{{ lastDate }}</div>
+          <div class="date-separator text-body-secondary sticky-top bg-body">{{ lastDate }}</div>
         {% endif %}
         {% include motie-card.html %}
       {% endif %}
