@@ -1,4 +1,6 @@
-<div class="card my-1 motie-card
+<div 
+id="{{ motie['Id'] }}"
+class="card my-1 motie-card
 {% if motie['Stemmingen'][0]['Resultaat'] == 'Aangenomen.' %}
 border-success
 {% endif %}
@@ -57,7 +59,8 @@ border-danger
     <li class="list-group-item">
       <div class="container text-left">
         <div class="row row-cols-2 row-cols-md-5 motie-stemming">
-          {% for fractie in motie['Stemmingen'][0]['Fracties'] %}
+          {% assign fractiesSorted = motie['Stemmingen'][0]['Fracties'] | sort %}
+          {% for fractie in fractiesSorted %}
             <div class="col text-truncate">
             {% case fractie[1] %}
             {% when "Voor" %}

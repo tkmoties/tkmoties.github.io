@@ -35,10 +35,8 @@ var chunkSize = 250;
     console.log(`Totaal aantal moties in ${year}: ${totalMoties}`);
     
     // totalMoties = 2;
-    // chunkSize = 20;
+    // chunkSize = 2;
 
-    // var motiesToChache = [];
-    
     for (var chunkOffset = 0; chunkOffset < totalMoties; chunkOffset += chunkSize) {
       console.log(chunkOffset);
       await odataTk.get(`Zaak`)
@@ -99,9 +97,17 @@ var chunkSize = 250;
                     totals['Anders'] += stem.FractieGrootte;
                   }
                 }
-                stemmingToCache.Voor = totals.Voor;
-                stemmingToCache.Tegen = totals.Tegen;
-                stemmingToCache.Anders = totals.Anders;
+                
+                const hoofdelijk = RegExp('\\(Hoofdelijk ([0-9]*)-([0-9]*)\\)', 'gm').exec(besluit.BesluitTekst);
+                if (hoofdelijk != null) {
+                  stemmingToCache.Voor = hoofdelijk[1];
+                  stemmingToCache.Tegen = hoofdelijk[2];
+                  stemmingToCache.Anders = 0;
+                } else {
+                  stemmingToCache.Voor = totals.Voor;
+                  stemmingToCache.Tegen = totals.Tegen;
+                  stemmingToCache.Anders = totals.Anders;
+                }
                 stemmingToCache.PercentVoor = Math.trunc(100 * totals.Voor / (totals.Voor + totals.Tegen));
                 stemmingToCache.PercentTegen = 100 - stemmingToCache.PercentVoor;
                 motieToCache.Stemmingen.push(stemmingToCache);
@@ -114,8 +120,6 @@ var chunkSize = 250;
           }
           // console.log(moties.length);
         })
-      // console.log(motiesToChache);
-      // fs.writeFile('data/motie-cache.json', JSON.stringify(motiesToChache), 'utf8', function(){});
     }
 
   // } catch (error) {
