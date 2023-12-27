@@ -1,21 +1,13 @@
-<div 
-id="{{ motie['Id'] }}"
-class="card my-1 motie-card
-{% if motie['Stemmingen'][0]['Resultaat'] == 'Aangenomen.' %}
-border-success
+{% assign resultColor = "" %}
+{% if motie['Stemmingen'][0]['Resultaat'] contains "Aangenomen" %}
+{% assign resultColor = "success" %}
 {% endif %}
-{% if motie['Stemmingen'][0]['Resultaat'] == 'Verworpen.' %}
-border-danger
+{% if motie['Stemmingen'][0]['Resultaat'] contains "Verworpen" %}
+{% assign resultColor = "danger" %}
 {% endif %}
-">
-  <div class="card-header motie-onderwerp
-  {% if motie['Stemmingen'][0]['Resultaat'] == 'Aangenomen.' %}
-  text-bg-success
-  {% endif %}
-  {% if motie['Stemmingen'][0]['Resultaat'] == 'Verworpen.' %}
-  text-bg-danger
-  {% endif %}
-  ">
+
+<div id="{{ motie['Id'] }}" class="card my-1 motie-card border-{{ resultColor }}">
+  <div class="card-header motie-onderwerp text-bg-{{ resultColor }}">
       {{ motie['Onderwerp'] }}
   </div>
   <div class="card-body">

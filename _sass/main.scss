@@ -13,8 +13,10 @@
 
 .date-separator:not(:empty)::before {
     margin-right: .25em;
+    margin-left: .25em;
 }
 
 .date-separator:not(:empty)::after {
+    margin-right: .25em;
     margin-left: .25em;
 }
