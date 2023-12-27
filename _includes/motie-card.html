@@ -15,7 +15,12 @@
       {{ motie['Titel'] }}
     </h7><br/>
     <h7 class="card-subtitle mb-2 text-body-secondary motie-indieners">
-      Indieners: {{ motie['Indieners'] | join: "; " }}
+      Indieners: 
+      {% for indiener in motie['Indieners'] %}
+        {% if forloop.length > 0 %}
+          {{ indiener[0] }} ({{ indiener[1] }}){% unless forloop.last %}, {% endunless %}
+        {% endif %}
+      {% endfor %}
     </h7><br/>
     <h7 class="card-subtitle mb-2 text-body-secondary motie-indieners">
       Kabinetsappreciatie: {{ motie['Kabinetsappreciatie'] }}
