@@ -1,0 +1,20 @@
+https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0
+/Zaak?
+&$count=true
+&$top=1
+&$expand=
+ZaakActor(
+  $filter=Relatie eq 'Indiener' or Relatie eq 'MedeIndiener'  
+  ;$select=Id,ActorNaam,ActorFractie,GewijzigdOp,ApiGewijzigdOp
+),Besluit(
+  $expand=Stemming(
+    $filter=Verwijderd eq false
+    ;$select=Id,Soort,FractieGrootte,ActorNaam,ActorFractie,GewijzigdOp,ApiGewijzigdOp)
+  ;$filter=Verwijderd eq false and contains(BesluitSoort, 'Stemmen')
+  ;$select=Id,BesluitSoort,GewijzigdOp,ApiGewijzigdOp
+)
+&$filter=
+Verwijderd eq false and Soort eq 'Motie' and Besluit/any(
+  a: contains(a/BesluitSoort, 'Stemmen')
+) and year(GestartOp) eq 2023
+&$select=Id,BesluitSoort,GewijzigdOp,ApiGewijzigdOp

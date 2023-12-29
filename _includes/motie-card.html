@@ -1,65 +1,65 @@
-{% assign resultColor = "" %}
-{% if motie['Stemmingen'][0]['Resultaat'] contains "Aangenomen" %}
+{% assign resultColor = "shouldnthappen" %}
+{% if motie.Besluit[0].BesluitSoort contains "aangenomen" %}
 {% assign resultColor = "success" %}
 {% endif %}
-{% if motie['Stemmingen'][0]['Resultaat'] contains "Verworpen" %}
+{% if motie.Besluit[0].BesluitSoort contains "verworpen" %}
 {% assign resultColor = "danger" %}
 {% endif %}
 
-<div id="{{ motie['Id'] }}" class="card my-1 motie-card border-{{ resultColor }}">
+<div id="{{ motie.Id }}" class="card my-1 motie-card border-{{ resultColor }}">
   <div class="card-header motie-onderwerp text-bg-{{ resultColor }}">
-      {{ motie['Onderwerp'] }}
+      {{ motie.Onderwerp }}
   </div>
   <div class="card-body">
     <h7 class="card-subtitle mb-2 text-body-secondary motie-titel">
-      {{ motie['Titel'] }}
+      {{ motie.Titel }}
     </h7><br/>
     <h7 class="card-subtitle mb-2 text-body-secondary motie-indieners">
       Indieners: 
-      {% for indiener in motie['Indieners'] %}
+      {% for indiener in motie.ZaakActor %}
         {% if forloop.length > 0 %}
-          {{ indiener[0] }} ({{ indiener[1] }}){% unless forloop.last %}, {% endunless %}
+          {{ indiener.ActorNaam }} ({{ indiener.ActorFractie }}){% unless forloop.last %}, {% endunless %}
         {% endif %}
       {% endfor %}
     </h7><br/>
     <h7 class="card-subtitle mb-2 text-body-secondary motie-indieners">
-      Kabinetsappreciatie: {{ motie['Kabinetsappreciatie'] }}
+      Kabinetsappreciatie: {{ motie.Kabinetsappreciatie }}
     </h7>
   </div>
   <ul class="list-group list-group-flush">
-    {% for stemming in motie['Stemmingen'] %}
+    {% for besluit in motie.Besluit %}
     <li class="list-group-item d-flex">
       <div class="flex-grow-1">
         <div class="progress-stacked d-fill">
-          <div class="progress motie-voor" role="progressbar" aria-label="SegmentVoor" aria-valuenow="{{ stemming.PercentVoor }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ stemming.PercentVoor }}%">
+          <div class="progress motie-voor" role="progressbar" aria-label="SegmentVoor" aria-valuenow="{{ besluit.Stats.PercentVoor }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ besluit.Stats.PercentVoor }}%">
             <div class="progress-bar progress-bar-striped bg-success">
-              {{ stemming['Voor'] }}
+              {{ besluit.Stats.Voor }}
             </div>
           </div>
-          <div class="progress motie-tegen" role="progressbar" aria-label="SegmentTegen" aria-valuenow="{{ stemming.PercentTegen }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ stemming.PercentTegen }}%">
+          <div class="progress motie-tegen" role="progressbar" aria-label="SegmentTegen" aria-valuenow="{{ besluit.Stats.PercentTegen }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ besluit.Stats..PercentTegen }}%">
             <div class="progress-bar progress-bar-striped bg-danger">
-              {{ stemming['Tegen'] }}
+              {{ besluit.Stats.Tegen }}
             </div>
           </div>
         </div>
       </div>
       <div class="ps-2 motie-resultaat">
-        {{ stemming['Resultaat'] }}
-        {% if stemming['Resultaat'] == 'Aangenomen.' %}
-          {% include symbol-voor.html %}
-        {% endif %}
-        {% if stemming['Resultaat'] == 'Verworpen.' %}
-          {% include symbol-tegen.html %}
-        {% endif %}
+        {{ motie['Besluit'][0]['BesluitSoort'] | replace: "Stemmen -", "" | capitalize }}
+        {% case resultColor %}
+        {% when "success" %}
+        {% include symbol-voor.html %}
+        {% when "danger" %}
+        {% include symbol-tegen.html %}
+        {% endcase %}
       </div>
     </li>
     <li class="list-group-item">
       <div class="container text-left">
         <div class="row row-cols-2 row-cols-md-5 motie-stemming">
-          {% assign fractiesSorted = motie['Stemmingen'][0]['Fracties'] | sort %}
+          {% assign fractiesSorted = motie['Besluit'][0]['Stemming'] | sort: "ActorNaam" %}
           {% for fractie in fractiesSorted %}
             <div class="col text-truncate">
-            {% case fractie[1] %}
+            {% case fractie['Soort'] %}
             {% when "Voor" %}
               {% include symbol-voor.html %}
             {% when "Tegen" %}
@@ -67,7 +67,7 @@
             {% else %}
               {% include symbol-anders.html %}
             {% endcase %}
-            {{ fractie[0] }}
+            {{ fractie['ActorNaam'] }}
             </div>
           {% endfor %}
         </div>
