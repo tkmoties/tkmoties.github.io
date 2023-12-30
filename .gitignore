@@ -2,5 +2,9 @@ _site
 .sass-cache
 .jekyll-cache
 .jekyll-metadata
+.bundle
 vendor
 node_modules
+
+moties/**/moties/
+_data/moties/

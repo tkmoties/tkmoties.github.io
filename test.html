@@ -1,0 +1,10 @@
+---
+---
+
+{{ site.data.test.test.d2d5a01f-b30b-4c3e-80fc-39d618eca7ef }}
+
+<br/><br/>
+
+{% assign data = site.data.test.test | group_by_exp: "x", "x[1].Magic" %}
+
+{{ data }}

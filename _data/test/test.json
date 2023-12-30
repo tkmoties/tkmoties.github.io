@@ -1,0 +1,24 @@
+{
+  "d2d5a01f-b30b-4c3e-80fc-39d618eca7ef": {
+    "Magic": 1,
+    "Id": "d2d5a01f-b30b-4c3e-80fc-39d618eca7ef",
+    "ApiGewijzigdOp": "2023-12-21T20:32:56.2737108Z",
+    "Zaak": [
+      {
+        "Id": "6f9e9b90-e830-48b2-8eeb-b9b55a275aad",
+        "GestartOp": "2023-12-21T00:00:00+01:00"
+      }
+    ]
+  },
+  "f2308fd8-5bec-42b9-92f4-65feb3be7890": {
+    "Magic": 1,
+    "Id": "f2308fd8-5bec-42b9-92f4-65feb3be7890",
+    "ApiGewijzigdOp": "2023-12-21T20:32:56.2580832Z",
+    "Zaak": [
+      {
+        "Id": "c734f6d6-a8f7-49f1-b518-3abf04598511",
+        "GestartOp": "2023-12-21T00:00:00+01:00"
+      }
+    ]
+  }
+}

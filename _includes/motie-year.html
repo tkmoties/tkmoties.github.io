@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Moties met stemmingen van de Tweede Kamer {{ page.jaar }}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script>var moties = [];</script>
+</head>
+<body>
+  
+<div id="progressMoties" class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="height: 1px">
+  <div class="progress-bar" style="width: 0%;"></div>
+</div>
+  
+<div id="moties" class="container">
+  
+{% assign motiesSorted = site.data.moties[year] | group_by_exp: "motie", "motie[1].Zaak[0].GestartOp | slice: 0,10" | sort: "name" | reverse %}
+
+{% assign previousDate = "" %}
+{% for motieDateGroup in motiesSorted %}
+  {% assign currentDate = motieDateGroup.name %}
+  <div id="date-{{ currentDate }}">
+    <div class="d-flex flex-nowrap sticky-top bg-body">
+      <div class="mx-1">
+        <a href="#date-{{ previousDate }}">{% include symbol-up1.html %}</a>
+      </div>
+      <div class="flex-fill date-separator text-body-secondary">
+        <a class="link-underline link-underline-opacity-0 text-body-secondary" href="#date-{{ currentDate }}">
+          {{ currentDate }}
+        </a>
+      </div>
+      <div class="mx-1">
+        <a href="#">{% include symbol-down1.html %}</a>
+      </div>
+    </div>
+    {% for kv in motieDateGroup.items %}
+      {% assign currentId = kv[0] %}
+      {% assign motie = kv[1] %}
+      <script>moties.push({"date": "{{currentDate}}", "Id": "{{kv[0]}}"});</script>
+    {% endfor %}
+  </div>
+
+  {% assign previousDate = currentDate %}
+{% endfor %}
+
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"/></script>
+
+
+<script>
+window.addEventListener('load', function () {
+  (async() => {
+    const dateSeparators = document.querySelectorAll('.date-separator');
+    dateSeparators[0].parentNode.childNodes[1].childNodes[1].href = '#';
+    for (var idx = 0; idx < dateSeparators.length - 1; idx += 1) {
+      dateSeparators[idx].parentNode.childNodes[5].childNodes[1].href = dateSeparators[idx+1].childNodes[1].href;
+    }
+
+    let motieCounter = 0;
+    await moties.forEach(motie => {
+      fetch(`http://localhost:4000/moties/{{ year }}/moties/${motie.Id}.html`)
+      .then(response => {
+        if (response.status != 200) {
+          console.log(response)
+        }
+        return response;
+      })
+      .then(response => response.text())
+      .then(response => {
+        document.querySelector(`#date-${motie.date}`)
+        .insertAdjacentHTML('beforeend', response);
+        motieCounter += 1;
+        document.querySelector('#progressMoties')
+        .childNodes[1].style.width = `${100 * motieCounter / moties.length}%`;
+
+        if (motieCounter === moties.length) {
+          document.querySelector('#progressMoties').hidden = true;
+        }
+      })
+    });
+  })();
+});
+
+</script>
+</html>
