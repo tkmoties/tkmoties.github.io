@@ -6,5 +6,5 @@ _site
 vendor
 node_modules
 
-moties/**/moties/
+moties/
 _data/moties/

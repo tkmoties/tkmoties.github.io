@@ -3,14 +3,20 @@
   - Create a page in moties/{year}/{id}.html
  */
 
-
 var fs = require('fs');
+
+const topVal = process.argv[2];
+let top = ''
+if (typeof topVal !== 'undefined') {
+  top = `&$top=${topVal}`;
+}
 
 const urlApi = 'https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0';
 
 const motieQuery = `
 Besluit?
 &$orderby=ApiGewijzigdOp desc
+${top}
 &$count=true
 &$expand=Zaak(
   $expand=ZaakActor(
