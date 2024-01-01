@@ -22,6 +22,12 @@ async function loadMoties() {
     .then(response => response.text())
     .then(response => {
       motieCounter += 1;
+      if (!document.querySelector(`#loading-placeholder`).hidden) {
+        document.querySelector(`#loading-placeholder`).hidden = true;
+      }
+      if (document.querySelector(`#${elem.getAttribute('date')}`).hidden) {
+        document.querySelector(`#${elem.getAttribute('date')}`).hidden = false;
+      }
       elem.insertAdjacentHTML('beforeend', response);
       document.querySelector('#progressMoties').children[0]
       .style.width = `${100 * motieCounter / moties.length}%`;

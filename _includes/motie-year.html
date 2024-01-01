@@ -16,10 +16,11 @@
 {% assign motiesSorted = site.data.moties[year] | group_by_exp: "motie", "motie[1].Zaak[0].GestartOp | slice: 0,10" | sort: "name" | reverse %}
 
 <div id="moties" class="container">
+  <div id="loading-placeholder">Loading moties...</div>
 {% assign previousDate = "" %}
 {% for motieDateGroup in motiesSorted %}
   {% assign currentDate = motieDateGroup.name %}
-  <div id="date-{{ currentDate }}" class="sticky-top">
+  <div id="date-{{ currentDate }}" class="sticky-top date-separator-hidden-initially" hidden>
     <div class="d-flex flex-nowrap bg-body">
       <div class="mx-1">
         <a href="#date-{{ previousDate }}">{% include symbol-up1.html %}</a>
@@ -36,7 +37,7 @@
   </div>
   {% for kv in motieDateGroup.items %}
     {% assign currentId = kv[0] %}
-    <div motieId="{{ currentId }}" year="{{ year }}" class="motie-placeholder"></div>
+    <div motieId="{{ currentId }}" year="{{ year }}" class="motie-placeholder" date="date-{{ currentDate }}"></div>
   {% endfor %}
   {% assign previousDate = currentDate %}
 {% endfor %}
