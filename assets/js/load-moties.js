@@ -25,8 +25,8 @@ async function loadMoties() {
       if (!document.querySelector(`#loading-placeholder`).hidden) {
         document.querySelector(`#loading-placeholder`).hidden = true;
       }
-      if (document.querySelector(`#${elem.getAttribute('date')}`).hidden) {
-        document.querySelector(`#${elem.getAttribute('date')}`).hidden = false;
+      if (document.querySelector(`#${elem.getAttribute('date')}-separator`).hidden) {
+        document.querySelector(`#${elem.getAttribute('date')}-separator`).hidden = false;
       }
       elem.insertAdjacentHTML('beforeend', response);
       document.querySelector('#progressMoties').children[0]

@@ -20,7 +20,8 @@
 {% assign previousDate = "" %}
 {% for motieDateGroup in motiesSorted %}
   {% assign currentDate = motieDateGroup.name %}
-  <div id="date-{{ currentDate }}" class="sticky-top date-separator-hidden-initially" hidden>
+  <div id="date-{{ currentDate }}"></div>
+  <div id="date-{{ currentDate }}-separator" class="sticky-top date-separator-hidden-initially" hidden>
     <div class="d-flex flex-nowrap bg-body">
       <div class="mx-1">
         <a href="#date-{{ previousDate }}">{% include symbol-up1.html %}</a>
@@ -45,16 +46,8 @@
 
 {% endif %}
 
-<footer>
-  <small>
-    <a href="https://opendata.tweedekamer.nl/documentatie/odata-api">data sources</a>
-    <a href="https://github.com/tkmoties/tkmoties.github.io">page sources</a>
-  </small>
-</footer>
 </div>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-
 {% if site.data.moties[year] != null %}
 <script src="/assets/js/load-moties.js"></script>
 <script>

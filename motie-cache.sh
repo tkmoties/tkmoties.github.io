@@ -7,8 +7,6 @@ for year in $(seq 2007 2024); do
   cp _templates/year-index.html moties/$year/index.html; 
 done
 
-cp _templates/year-index-front.html moties/2023/index.html; 
-
 echo "Start caching from https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0"
 
-node motie-cache2.js
+node motie-cache2.js 50

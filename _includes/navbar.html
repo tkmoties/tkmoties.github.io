@@ -1,0 +1,35 @@
+{% assign yearPages = site.pages | where_exp: 'page', 'page.tag == "year-index"' | sort: 'url' | reverse %}
+{% assign firstYearPages = yearPages | slice: 0,7 %}
+{% assign lastYearPages = yearPages | slice: 7,10000 %}
+
+<nav class="navbar navbar-dark bg-dark navbar-expand-sm">
+  <div class="container-fluid">
+
+  <a href="/" class="navbar-brand">tkmoties</a>
+  <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="navbar-collapse collapse" id="navbar" navbar>
+      <ul class="navbar-nav">
+        {% for page in firstYearPages %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ page.url }}">{{ page.url | split: "/" | slice: 2 }}</a>
+        </li>
+        {% endfor %}
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            More
+          </a>
+          <ul class="dropdown-menu">
+            {% for page in lastYearPages %}
+            <li>
+              <a class="nav-link dropdown-item" href="{{ page.url }}">{{ page.url | split: "/" | slice: 2 }}</a>
+            </li>
+            {% endfor %}
+          </ul>
+        </li>
+      </ul>
+  </div>
+  </div>
+</nav>
