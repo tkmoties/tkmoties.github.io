@@ -55,12 +55,16 @@ const motieCard = `---
     nextLink = await fetch(nextLink)
     .then(response => {
       if (response.status != 200) {
-        console.log(response);
+        console.dir(response, {'depth': null});
+        return Promise.reject(response);
       }
-      return response;
+      return response.json();
     })
-    .then(response => response.json())
     .then(odata => {
+      if (typeof odata.value === 'undefined') {
+        console.log(odata);
+        return Promise.reject(odata.error);
+      }
       let nextLink = undefined;
       if (typeof odata['@odata.nextLink'] !== 'undefined') {
         // If there is more data to retrieve, nextLink is set with the correct $skip value
@@ -136,10 +140,10 @@ const motieCard = `---
                 // No file, return empty 
                 resolve({});
               } else {
-                reject(err); // in the case of error, control flow goes to the catch block with the error occured.
+                reject(err);
               }
             } else {
-              resolve(JSON.parse(data));  // in the case of success, control flow goes to the then block with the content of the file.
+              resolve(JSON.parse(data));
             }
           });
         })
@@ -154,14 +158,20 @@ const motieCard = `---
       }
 
       return nextLink;
+    }).catch(error => {
+      // Catch it to retry, seems to happen every now and then
+      console.log(error);
+      if (typeof error.cause !== 'undefined' && error.cause.code === 'ECONNRESET') {
+        console.log(`Error while fetching ${url}, returning it to try again`)
+        return url;
+      } else {
+        throw error;
+      }
     })
-
 
     // Stop if there are no more odata links, or motieTotal has been reached
     if (typeof nextLink == 'undefined' || motieCount > motieTotal) {
       break;
     }
   }
-  // fs.writeFile(`_data/moties/${year}.json`, 
-  //     JSON.stringify(motieCache), 'utf8', (err) => { if (err) throw err });
 })();

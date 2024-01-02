@@ -9,4 +9,4 @@ done
 
 echo "Start caching from https://gegevensmagazijn.tweedekamer.nl/OData/v4/2.0"
 
-node motie-cache2.js 50
+node motie-cache2.js
