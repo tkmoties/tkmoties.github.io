@@ -22,6 +22,7 @@ async function loadMoties() {
     .then(response => response.text())
     .then(response => {
       motieCounter += 1;
+      document.querySelector('#motiesLoadedCounter').innerText = motieCounter;
       if (!document.querySelector(`#loading-placeholder`).hidden) {
         document.querySelector(`#loading-placeholder`).hidden = true;
       }

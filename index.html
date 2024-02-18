@@ -2,12 +2,23 @@
 layout: default
 ---
 
+
 <body>
   <div class="container">
   <h1>Moties met stemmingen van de Tweede Kamer per jaar.</h1>
-  <p>Een overzicht van alle moties waarover gestemd is in de Tweede Kamer per jaar. </p>
+  <p>Een overzicht van alle {{ site.data.meta.grandTotal }} moties waarover gestemd is in de Tweede Kamer per jaar. </p>
+
+  {% assign yearPages = site.pages | where_exp: 'page', 'page.tag == "year-index"' | sort: 'url' | reverse %}
+  <ul>
+    {% for page in yearPages %}
+    <li>
+      <a href="{{ page.url }}">{{ page.url | split: "/" | slice: 2 }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+
   </div>
-  <div class="container text-center fixed-bottom">
+  <div class="container text-center">
     <div class="row row-cols-auto">
       <div class="col">
         <a href="https://github.com/tkmoties/tkmoties.github.io" class="link-underline link-underline-opacity-0">

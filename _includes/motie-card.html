@@ -55,6 +55,7 @@
     <li class="list-group-item">
       <div class="container text-left">
         <div class="row row-cols-2 row-cols-md-5 motie-stemming">
+          {% if motie.Stemming != null %}
           {% assign fractiesSorted = motie.Stemming | sort: "ActorNaam" %}
           {% for fractie in fractiesSorted %}
             <div class="col text-truncate">
@@ -69,6 +70,7 @@
             {{ fractie['ActorNaam'] }}
             </div>
           {% endfor %}
+          {% endif %}
         </div>
       </div>
     </li>

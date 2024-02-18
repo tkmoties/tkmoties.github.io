@@ -50,7 +50,26 @@ const motieCard = `---
   let nextLink = url;
   let motieTotal = undefined;
   let motieCount = 0;
-  
+  let motieIdCache = {};
+  console.debug(nextLink);
+
+  let metaData = await new Promise((resolve,reject) => {
+    fs.readFile(`_data/meta.json`, 'utf-8', (err, data) => {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          // No file, return empty 
+          resolve({});
+        } else {
+          reject(err);
+        }
+      } else {
+        resolve(JSON.parse(data));
+      }
+    });
+  })
+
+  console.log(metaData);
+
   while (true) {
     nextLink = await fetch(nextLink)
     .then(response => {
@@ -62,7 +81,7 @@ const motieCard = `---
     })
     .then(odata => {
       if (typeof odata.value === 'undefined') {
-        console.log(odata);
+        console.debug(odata);
         return Promise.reject(odata.error);
       }
       let nextLink = undefined;
@@ -78,6 +97,9 @@ const motieCard = `---
     }).then(args => {
       let [moties, nextLink] = args;
       let motieCache = {};
+
+      // console.debug(moties);
+      console.debug(nextLink);
 
       moties.forEach(motie => {
         const motieYear = motie.Zaak[0].GestartOp.slice(0,4);
@@ -121,6 +143,7 @@ const motieCard = `---
         }
 
         motieCache[motieYear][motie.Id] = motie;
+        motieIdCache[motie.Id] = {};
         fs.writeFile(
           `moties/${motieYear}/moties/${motie.Id}.html`, 
           motieCard, 'utf8', (err) => { if (err) throw err });
@@ -151,8 +174,8 @@ const motieCard = `---
           // console.log(oldData);
           // console.log({...oldData, ...motieCache[motieYear]});
 
-        fs.writeFile(`_data/moties/${motieYear}.json`, 
-            JSON.stringify({...oldData, ...motieCache[motieYear]}), 'utf8', (err) => { if (err) throw err });
+          fs.writeFile(`_data/moties/${motieYear}.json`, 
+              JSON.stringify({...oldData, ...motieCache[motieYear]}), 'utf8', (err) => { if (err) throw err });
         });
 
       }
@@ -174,4 +197,6 @@ const motieCard = `---
       break;
     }
   }
+
+  // console.log(motieIdCache);
 })();
