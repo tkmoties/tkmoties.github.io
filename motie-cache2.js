@@ -154,9 +154,12 @@ const motieCard = `---
           metaData.motieMeta[motie.Id] = {
             year: motieYear,
             tweeted: false,
-            stemmingComplete: false,
+            stemmingSum: Object.values(motie.Stats).reduce((res, v) => res + v, 0),
           }
         }
+
+        metaData.motieMeta[motie.Id]['tweeted'] = false;
+        metaData.motieMeta[motie.Id]['stemmingSum'] = Object.values(motie.Stats).reduce((res, v) => res + v, 0);
         
       });
       motieCount += moties.length;
