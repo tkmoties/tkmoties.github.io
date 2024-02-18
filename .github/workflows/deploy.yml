@@ -58,11 +58,13 @@ jobs:
         env:
           JEKYLL_ENV: production
       - name: Commit & push changes to meta.json
+        # ignore error if there is nothing new to commit
         run: |
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add _data/meta.json
           git commit -m "[bot] update meta.json"
+          if git commit -m test; then echo 'nothing to commit'; fi 
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
