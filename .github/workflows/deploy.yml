@@ -57,6 +57,9 @@ jobs:
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
+      - name: Upload artifact
+        # Automatically uploads an artifact from the './_site' directory by default
+        uses: actions/upload-pages-artifact@v3
       - name: Commit & push changes to meta.json
         # ignore error if there is nothing new to commit
         run: |
@@ -70,9 +73,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref }}
-      - name: Upload artifact
-        # Automatically uploads an artifact from the './_site' directory by default
-        uses: actions/upload-pages-artifact@v3
 
   # Deployment job
   deploy:
