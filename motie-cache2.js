@@ -50,7 +50,6 @@ const motieCard = `---
   let nextLink = url;
   let motieTotal = undefined;
   let motieCount = 0;
-  let motieIdCache = {};
   console.debug(nextLink);
 
   let metaData = await new Promise((resolve,reject) => {
@@ -66,9 +65,12 @@ const motieCard = `---
         resolve(JSON.parse(data));
       }
     });
-  })
+  });
 
-  console.log(metaData);
+  if (!('motieMeta' in metaData)) {
+    console.info('no motieMeta in metaData yet');
+    metaData['motieMeta'] = {};
+  }
 
   while (true) {
     nextLink = await fetch(nextLink)
@@ -107,9 +109,9 @@ const motieCard = `---
           motieCache[motieYear] = {};
         }
         motie.Stats = {
-          'Voor': 0,
-          'Tegen': 0,
-          'Anders': 0,
+          Voor: 0,
+          Tegen: 0,
+          Anders: 0,
         }
 
         if (motie.StemmingsSoort == 'Hoofdelijk') {
@@ -143,10 +145,19 @@ const motieCard = `---
         }
 
         motieCache[motieYear][motie.Id] = motie;
-        motieIdCache[motie.Id] = {};
         fs.writeFile(
           `moties/${motieYear}/moties/${motie.Id}.html`, 
           motieCard, 'utf8', (err) => { if (err) throw err });
+
+        if (!(motie.Id in metaData.motieMeta)) {
+          console.info(`${motie.Id} not in motieMeta yet`);
+          metaData.motieMeta[motie.Id] = {
+            year: motieYear,
+            tweeted: false,
+            stemmingComplete: false,
+          }
+        }
+        
       });
       motieCount += moties.length;
       console.log(`${motieCount} / ${motieTotal}`);
@@ -183,11 +194,12 @@ const motieCard = `---
       return nextLink;
     }).catch(error => {
       // Catch it to retry, seems to happen every now and then
-      console.log(error);
+      console.error(error);
       if (typeof error.cause !== 'undefined' && error.cause.code === 'ECONNRESET') {
-        console.log(`Error while fetching ${url}, returning it to try again`)
+        console.error(`Error while fetching ${url}, returning it to try again`)
         return url;
       } else {
+        console.error(`Unhandled error while fetching ${url}`)
         throw error;
       }
     })
@@ -198,5 +210,9 @@ const motieCard = `---
     }
   }
 
-  // console.log(motieIdCache);
+  fs.writeFile(`_data/meta.json`, 
+    JSON.stringify(metaData), 'utf8', (err) => { if (err) throw err });
+
+
+  // console.debug(metaData);
 })();
