@@ -13,7 +13,7 @@
 </div>
 {% if site.data.moties[year] != null and site.data.moties[year] != false %}
 
-{% assign motiesSorted = site.data.moties[year] | group_by_exp: "motie", "motie[1].Zaak[0].GestartOp | slice: 0,10" | sort: "name" | reverse %}
+{% assign motiesSorted = site.data.moties[year] | group_by_exp: "motie", "motie[1].Zaak[0].GewijzigdOp | slice: 0,10" | sort: "name" | reverse %}
 
 <div id="moties" class="container">
   <div id="loading-placeholder">Loading moties...</div>

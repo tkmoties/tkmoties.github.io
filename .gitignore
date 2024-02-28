@@ -5,6 +5,7 @@ _site
 .bundle
 vendor
 node_modules
+secrets.txt
 
 moties/
 _data/moties/
